@@ -53,8 +53,7 @@ function GuiController:SetupEffects()
                 local blacklistedGuis = {"SettingsImage", "ShopImage", "CreditsImage"}
 
                 if not table.find(blacklistedGuis, imageLabel.Name) then
-                    local BlurTween = TweenService:Create(Lighting.Blur, TweenInfo.new(1.5), {Size = advancedBlur})
-                    BlurTween:Play()
+                    advancedBlur:Play()
 
                     local buttonGui = playerGui[string.gsub(imageLabel.Name, "Image", "") .. "Gui"]
                     buttonGui.Enabled = true
@@ -76,19 +75,18 @@ function GuiController:SetupReturns()
                 menuGui.Container:TweenPosition(UDim2.new(0.08, 0, 0.15, 0), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.3, true)
             end
 
+            normalBlur:Play()
             playerGui[guiToEnable].Enabled = true
         end)
-
-        normalBlur:Play()
     end
 end
 
 function GuiController:KnitStart()
-    print("GuiController KnitStart called")
+    --
 end
 
 function GuiController:KnitInit()
-    print("GuiController KnitInit called")
+    --
 
     self:SetupGuis()
     self:SetupEffects()
