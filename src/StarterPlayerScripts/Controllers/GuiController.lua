@@ -7,13 +7,12 @@ local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
 local menuGui = playerGui:WaitForChild("MenuGui")
-local menuGuiX = UDim2.new(0.08, 0)
 
-local normalBlur = 8
-local advancedBlur = 24
+local normalBlur = TweenService:Create(Lighting.Blur, TweenInfo.new(1.5), {Size = 8})
+local advancedBlur = TweenService:Create(Lighting.Blur, TweenInfo.new(1.5), {Size = 24})
 
-local roundFrameRight = UDim2.new(0.471, 0, -0.009, 0)
-local roundFrameLeft  = UDim2.new(0, 0, -0.009, 0)
+--local roundFrameRight = UDim2.new(0.471, 0, -0.009, 0)
+--local roundFrameLeft  = UDim2.new(0, 0, -0.009, 0)
 
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
@@ -47,7 +46,7 @@ function GuiController:SetupEffects()
         end)
 
         textButton.MouseButton1Click:Connect(function()
-            menuGui.Container:TweenPosition(UDim2.new(-1, 0, menuGui.Container.Position.Y.Scale, 0))
+            menuGui.Container:TweenPosition(UDim2.new(-0.5, 0, 0.15, 0), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.3, true)
 
             for _, imageLabel in ipairs(menuGui.Container:GetChildren()) do
                 if not imageLabel:IsA("ImageLabel") then continue end
@@ -58,23 +57,29 @@ function GuiController:SetupEffects()
                     BlurTween:Play()
 
                     local buttonGui = playerGui[string.gsub(imageLabel.Name, "Image", "") .. "Gui"]
-                    --buttonGui.Enabled = true
-                    playerGui.HostGui.Enabled = true
-
-                    --local sizeTween = TweenService:Create(buttonGui.Background, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 1, false, 0), {Size = UDim2.new(0, 670, 0, 730)})
-                    --sizeTween:Play()
-
-                    --buttonGui.Background.Frame:TweenSize(UDim2.new(0, 655, 0, 717))
-                    --buttonGui.Background:TweenSize(UDim2.new(0, 670, 0, 730))
-    
-                    local currentrot = buttonGui.Overlay.UIGradient.Rotation -- Gets the initial rotation of the UIGradient
-                    local TweenInformation = TweenInfo.new(5, Enum.EasingStyle.Linear,Enum.EasingDirection.In,-1,false)
-                    local Goal = {Rotation = currentrot + 360}
-                    local Tween = TweenService:Create(buttonGui.Overlay.UIGradient, TweenInformation, Goal)
-                    Tween:Play()
+                    buttonGui.Enabled = true
                 end
             end
         end)
+    end
+end
+
+function GuiController:SetupReturns()
+    for _, backButton in ipairs(playerGui:GetDescendants()) do
+        if not (backButton:IsA("TextButton") and backButton.Name == "BackButton") then continue end
+
+        backButton.MouseButton1Click:Connect(function()
+            backButton.Parent.Enabled = false
+            local guiToEnable = backButton.Parent:GetAttribute("PreviousGui")
+
+            if guiToEnable == "MenuGui" then
+                menuGui.Container:TweenPosition(UDim2.new(0.08, 0, 0.15, 0), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.3, true)
+            end
+
+            playerGui[guiToEnable].Enabled = true
+        end)
+
+        normalBlur:Play()
     end
 end
 
@@ -87,6 +92,7 @@ function GuiController:KnitInit()
 
     self:SetupGuis()
     self:SetupEffects()
+    self:SetupReturns()
 end
 
 return GuiController
