@@ -16,12 +16,10 @@ function CameraController:SetupCamera()
 end
 
 function CameraController:KnitStart()
-    print("CameraController KnitStart called")
+    print("CameraController started.")
 end
 
 function CameraController:KnitInit()
-    print("CameraController KnitInit called")
-
     RunService.RenderStepped:Connect(function()
         self:SetupCamera()
     end)

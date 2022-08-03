@@ -82,7 +82,7 @@ function GuiController:SetupReturns()
 end
 
 function GuiController:KnitStart()
-    --
+    print("GuiController started.")
 end
 
 function GuiController:KnitInit()
