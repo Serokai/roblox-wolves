@@ -40,36 +40,42 @@ function CreatorController:SetupClicks()
 end
 
 function CreatorController:SetupCreatorGui()
-    local function DestroyImageLabels(list)
-        if not list:FindFirstChildWhichIsA("ImageLabel") then return end
+    local function DestroyImageLabels(frameList)
+        if not frameList:FindFirstChildWhichIsA("ImageLabel") then return end
 
-        for _, imageLabel in pairs(list) do
+        for _, imageLabel in pairs(frameList:GetChildren()) do
             if imageLabel:IsA("ImageLabel") then
                 imageLabel:Destroy()
             end
         end
     end
 
+    local function RefreshRoleImages(roleList, frameList)
 
-    for _, value in ipairs(self.classicRoles) do
-        value[2] = 0
-
-        local classicRole = scrollingFrame.ClassicRoles.RoleName:Clone()
-        classicRole.Name = value[1]
-        classicRole.Image = value[3]
-        classicRole.Visible = true
-        classicRole.Parent = scrollingFrame.ClassicRoles.List
     end
 
-    for _, value in ipairs(self.specialRoles) do
-        value[2] = false
+    local function CreateImageLabels(roleList, frameList)
+        for _, value in ipairs(roleList) do
 
-        local specialRole = scrollingFrame.SpecialRoles.RoleName:Clone()
-        specialRole.Name = value[1]
-        specialRole.Image = value[3]
-        specialRole.Visible = true
-        specialRole.Parent = scrollingFrame.SpecialRoles.List
+            if roleList == self.ClassicRoles then
+                value[2] = 0
+            elseif roleList == self.SpecialRoles then
+                value[2] = false
+            end
+    
+            local classicRole = frameList.RoleName:Clone()
+            classicRole.Name = value[1]
+            classicRole.Image = value[3]
+            classicRole.Visible = true
+            classicRole.Parent = frameList
+        end
     end
+
+    DestroyImageLabels(scrollingFrame.ClassicRoles.List)
+    DestroyImageLabels(scrollingFrame.SpecialRoles.List)
+
+    RefreshRoleImages(self.ClassicRoles)
+    RefreshRoleImages(self.SpecialRoles)
 
     -- ? Overview
     overview.OwnerImage.Image = Players:GetUserThumbnailAsync(localPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
