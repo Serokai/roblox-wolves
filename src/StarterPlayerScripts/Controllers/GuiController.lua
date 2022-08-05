@@ -8,7 +8,7 @@ local playerGui = player:WaitForChild("PlayerGui")
 
 local menuGui = playerGui:WaitForChild("MenuGui")
 
-local normalBlur = TweenService:Create(Lighting.Blur, TweenInfo.new(1.5), {Size = 8})
+local normalBlur = TweenService:Create(Lighting.Blur, TweenInfo.new(1.5), {Size = 4})
 local advancedBlur = TweenService:Create(Lighting.Blur, TweenInfo.new(1.5), {Size = 24})
 
 --local roundFrameRight = UDim2.new(0.471, 0, -0.009, 0)
@@ -33,6 +33,13 @@ function GuiController:SetupGuis()
 end
 
 function GuiController:SetupEffects()
+    for _, lightingEffect in pairs(Lighting:GetChildren()) do
+        lightingEffect.Enabled = true
+    end
+    Lighting.Brightness = 2
+    Lighting.ClockTime = 20
+    Lighting.FogEnd = 100
+
     for _, textButton in ipairs(menuGui:GetDescendants()) do
         if not textButton:IsA("TextButton") then continue end
 
